@@ -5,6 +5,7 @@ document.getElementById("logout").addEventListener("click", logout);
 const q = document.getElementById("q"), body = document.getElementById("rows"), status = document.getElementById("status");
 const dlg = document.getElementById("contact-dlg"), form = document.getElementById("contact-form"), fmsg = document.getElementById("form-msg");
 const del = document.getElementById("delete-dlg");
+const COLORS = ["#4338ca","#0f766e","#b45309","#be185d","#1d4ed8","#7c3aed"];
 let timer, ctrl, deleteId = null;
 
 async function search(){
@@ -21,7 +22,12 @@ function render(list){
   showMsg(status, list.length ? list.length + (list.length === 1 ? " contact" : " contacts") + " found" : (q.value ? "No contacts match your search." : "No contacts yet. Add your first one."));
   list.forEach(c => {
     const tr = document.createElement("tr");
-    [c.firstName + " " + c.lastName, c.email, c.phone, c.address].forEach(t => { const td = document.createElement("td"); td.textContent = t; tr.append(td); });
+    const nm = document.createElement("td"), wrap = document.createElement("div"), av = document.createElement("span");
+    wrap.className = "name"; av.className = "avatar"; av.setAttribute("aria-hidden", "true");
+    av.textContent = ((c.firstName[0] || "") + (c.lastName[0] || "")).toUpperCase();
+    av.style.setProperty("--c", COLORS[(c.firstName.length + c.lastName.length + c.id) % COLORS.length]);
+    wrap.append(av, document.createTextNode(c.firstName + " " + c.lastName)); nm.append(wrap); tr.append(nm);
+    [c.email, c.phone, c.address].forEach(t => { const td = document.createElement("td"); td.textContent = t; tr.append(td); });
     const td = document.createElement("td"); td.className = "row-actions";
     const name = c.firstName + " " + c.lastName;
     td.append(btn("Edit", "ghost small", "Edit " + name, () => openForm(c)), btn("Delete", "danger small", "Delete " + name, () => { deleteId = c.id; document.getElementById("del-name").textContent = name; del.showModal(); }));
