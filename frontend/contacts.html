@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="css/styles.css"><title>My contacts - Contact Manager</title><meta name="description" content="Search and manage your contacts."></head>
+<body><header class="bar"><a class="logo" href="contacts.html">Contact Manager</a><div class="actions"><span id="who"></span><button id="logout" class="btn ghost small" type="button">Sign out</button></div></header>
+<main><div class="toolbar"><div class="grow"><label for="q">Search contacts</label><input id="q" type="search" placeholder="Name, email, phone or address" autocomplete="off"></div>
+<button id="add" class="btn" type="button">Add contact</button></div>
+<p id="status" class="msg" role="status" aria-live="polite"></p>
+<div class="tablewrap"><table><thead><tr><th scope="col">Name</th><th scope="col">Email</th><th scope="col">Phone</th><th scope="col">Address</th><th scope="col">Actions</th></tr></thead><tbody id="rows"></tbody></table></div></main>
+<dialog id="contact-dlg" aria-labelledby="dlg-title"><h2 id="dlg-title">Add contact</h2>
+<form id="contact-form"><input type="hidden" name="id">
+<label for="c-first">First name</label><input id="c-first" name="firstName" required>
+<label for="c-last">Last name</label><input id="c-last" name="lastName" required>
+<label for="c-email">Email</label><input id="c-email" name="email" type="email">
+<label for="c-phone">Phone</label><input id="c-phone" name="phone" type="tel">
+<label for="c-addr">Address</label><input id="c-addr" name="address">
+<p id="form-msg" class="msg" role="status"></p>
+<div class="dlg-actions"><button id="cancel" class="btn ghost" type="button">Cancel</button><button class="btn">Save contact</button></div></form></dialog>
+<dialog id="delete-dlg" aria-labelledby="del-title"><h2 id="del-title">Delete contact?</h2><p>This permanently removes <strong id="del-name"></strong>.</p>
+<div class="dlg-actions"><button id="del-cancel" class="btn ghost" type="button">Keep contact</button><button id="del-ok" class="btn danger" type="button">Delete contact</button></div></dialog>
+<script src="js/common.js"></script><script src="js/contacts.js"></script></body></html>
