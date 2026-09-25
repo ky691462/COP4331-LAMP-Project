@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="css/styles.css"><link rel="icon" href="logo.svg" type="image/svg+xml"><meta name="theme-color" content="#1b1e3a">
-<title>Pocketbook - contacts you can find</title><meta name="description" content="Pocketbook keeps your contacts in one place and finds them as you type."></head>
+<title>Sign in - Pocketbook</title><meta name="description" content="Sign in to Pocketbook."></head>
 <body><header class="bar"><a class="logo" href="index.html"><img src="logo.svg" alt="" width="28" height="28">Pocketbook</a></header>
-<main class="hero"><div><h1>Every contact, one search away.</h1><p>Pocketbook keeps names, emails, phone numbers and addresses together, and finds them as you type.</p>
-<div class="actions"><a class="btn" href="register.html">Create account</a><a class="btn ghost" href="login.html">Sign in</a></div></div>
-<div class="stack" aria-hidden="true">
-<div class="row"><span class="avatar" style="--c:#4338ca">AR</span><div><strong>Ana Rivera</strong><small>ana@example.com</small></div></div>
-<div class="row"><span class="avatar" style="--c:#0f766e">JK</span><div><strong>Jamal Khan</strong><small>555-0142</small></div></div>
-<div class="row"><span class="avatar" style="--c:#be185d">LP</span><div><strong>Lena Park</strong><small>12 Orange Ave</small></div></div></div></main>
-<script src="js/common.js"></script><script>if(getUser())location.href="contacts.html"</script></body></html>
+<main><div class="card"><h1>Sign in</h1>
+<form id="auth-form" data-mode="login"><label for="login">Username</label><input id="login" name="login" autocomplete="username" required>
+<label for="password">Password</label><input id="password" name="password" type="password" autocomplete="current-password" required>
+<p id="msg" class="msg" role="status" aria-live="polite"></p><button class="btn full">Sign in</button></form>
+<p class="foot">New here? <a href="register.html">Create an account</a></p></div></main>
+<script src="js/common.js"></script><script src="js/auth.js"></script></body></html>
