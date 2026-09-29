@@ -1,10 +1,26 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="css/styles.css"><link rel="icon" href="logo.svg" type="image/svg+xml"><meta name="theme-color" content="#1b1e3a"><title>My contacts - Pocketbook</title><meta name="description" content="Search and manage your contacts."></head>
-<body><header class="bar"><a class="logo" href="contacts.html"><img src="logo.svg" alt="" width="28" height="28">Pocketbook</a><div class="actions"><span id="who"></span><button id="logout" class="btn ghost small" type="button">Sign out</button></div></header>
-<main><div class="toolbar"><div class="grow"><label for="q">Search contacts</label><input id="q" type="search" placeholder="Name, email, phone or address" autocomplete="off"></div>
-<button id="add" class="btn" type="button">Add contact</button></div>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="css/styles.css?v=20260929"><link rel="icon" href="logo.svg" type="image/svg+xml"><meta name="theme-color" content="#241c10">
+<title>My contacts - Pocketbook</title><meta name="description" content="Search and manage your contacts."></head>
+<body><header class="bar"><a class="logo" href="contacts.html"><img src="logo.svg" alt="" width="30" height="30">Pocketbook</a><span class="stamp" aria-hidden="true">Personal Edition</span>
+<div class="actions"><a id="admin-link" href="admin.html" class="btn ghost small" style="display:none">Admin panel</a><span class="who" id="who"></span><button id="logout" class="btn ghost small" type="button">Sign out</button></div></header>
+<main>
+<div class="toolbar"><div class="grow"><label for="q">Search contacts</label><input id="q" type="search" placeholder="Name, email, phone or address" autocomplete="off"></div>
+<button id="add" class="btn accent" type="button">Add contact</button></div>
 <p id="status" class="msg" role="status" aria-live="polite"></p>
-<div class="tablewrap"><table><thead><tr><th scope="col">Name</th><th scope="col">Email</th><th scope="col">Phone</th><th scope="col">Address</th><th scope="col">Actions</th></tr></thead><tbody id="rows"></tbody></table></div></main>
+
+<div class="cover">
+  <div class="spine-strip" aria-hidden="true"><span>Pocketbook</span></div>
+  <div class="leaf">
+    <div class="thumb-index" aria-hidden="true"><span>A</span><span>B</span><span>C</span><span>D</span><span>E</span><span>F</span><span>G</span><span>H</span><span>I</span><span>J</span><span>K</span><span>L</span><span>M</span><span>N</span><span>O</span><span>P</span><span>Q</span><span>R</span><span>S</span><span>T</span><span>U</span><span>V</span><span>W</span><span>X</span><span>Y</span><span>Z</span></div>
+    <h1 class="dir-title">The Directory</h1>
+    <div class="guide" aria-hidden="true"><strong id="guide-l">&mdash;</strong><span>Directory of listings</span><strong id="guide-r">&mdash;</strong></div>
+    <div class="dir-cols" id="entries"></div>
+    <p class="dir-foot" id="dir-foot"></p>
+  </div>
+</div>
+<p class="account-foot"><button id="delete-account" class="link-btn danger" type="button">Delete my account</button></p>
+</main>
+
 <dialog id="contact-dlg" aria-labelledby="dlg-title"><h2 id="dlg-title">Add contact</h2>
 <form id="contact-form"><input type="hidden" name="id">
 <label for="c-first">First name</label><input id="c-first" name="firstName" required>
@@ -13,7 +29,10 @@
 <label for="c-phone">Phone</label><input id="c-phone" name="phone" type="tel">
 <label for="c-addr">Address</label><input id="c-addr" name="address">
 <p id="form-msg" class="msg" role="status"></p>
-<div class="dlg-actions"><button id="cancel" class="btn ghost" type="button">Cancel</button><button class="btn">Save contact</button></div></form></dialog>
+<div class="dlg-actions"><button id="cancel" class="btn ghost" type="button">Cancel</button><button class="btn accent">Save contact</button></div></form></dialog>
 <dialog id="delete-dlg" aria-labelledby="del-title"><h2 id="del-title">Delete contact?</h2><p>This permanently removes <strong id="del-name"></strong>.</p>
 <div class="dlg-actions"><button id="del-cancel" class="btn ghost" type="button">Keep contact</button><button id="del-ok" class="btn danger" type="button">Delete contact</button></div></dialog>
-<script src="js/common.js"></script><script src="js/contacts.js"></script></body></html>
+<dialog id="delete-account-dlg" aria-labelledby="del-account-title"><h2 id="del-account-title">Delete your account?</h2><p>This permanently removes your account and every contact in it. This can't be undone.</p>
+<p id="del-account-msg" class="msg" role="status"></p>
+<div class="dlg-actions"><button id="del-account-cancel" class="btn ghost" type="button">Keep my account</button><button id="del-account-ok" class="btn danger" type="button">Delete my account</button></div></dialog>
+<script src="js/common.js?v=20260929"></script><script src="js/contacts.js?v=20260929"></script></body></html>

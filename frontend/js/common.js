@@ -10,11 +10,14 @@ async function logout(){
   location.href = "index.html";
 }
 
-// If the server says the session is gone (expired or never logged in),
-// send the person back to login instead of showing a confusing error.
+// The backend always answers 200 OK, even when the session is missing or timed out —
+// it signals that through the JSON body instead of an HTTP status code.
+function isAuthError(data){
+  return data && (data.error === "Not logged in" || data.error === "Session expired");
+}
 function handleAuthFailure(){
   clearUser();
-  location.href = "login.html?expired=1";
+  location.href = "index.html?expired=1";
 }
 
 async function postJSON(endpoint, body){
@@ -24,14 +27,25 @@ async function postJSON(endpoint, body){
     credentials: "same-origin",
     body: JSON.stringify(body)
   });
-  if (r.status === 401 || r.status === 403) { handleAuthFailure(); throw new Error("session expired"); }
-  return r.json();
+  const data = await r.json();
+  if (isAuthError(data)) { handleAuthFailure(); throw new Error(data.error); }
+  return data;
 }
 
 async function getJSON(endpoint, params, signal){
   const r = await fetch(API + endpoint + "?" + new URLSearchParams(params), {credentials: "same-origin", signal});
-  if (r.status === 401 || r.status === 403) { handleAuthFailure(); throw new Error("session expired"); }
-  return r.json();
+  const data = await r.json();
+  if (isAuthError(data)) { handleAuthFailure(); throw new Error(data.error); }
+  return data;
 }
 
 function showMsg(el, text, type){ el.textContent = text; el.className = "msg " + (type || ""); }
+
+// Re-triggers the CSS page-flip animation every time a dialog opens (classes only
+// animate on a fresh add, so we remove + force reflow + re-add before showModal()).
+function openDialog(dlg){
+  dlg.classList.remove("flip-in");
+  void dlg.offsetWidth;
+  dlg.classList.add("flip-in");
+  dlg.showModal();
+}

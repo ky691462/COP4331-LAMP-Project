@@ -1,7 +1,7 @@
 const form = document.getElementById("auth-form");
 const msg = document.getElementById("msg");
 const isRegister = form.dataset.mode === "register";
-if (getUser()) location.href = "contacts.html";
+if (getUser()) location.href = getUser().isAdmin ? "admin.html" : "contacts.html";
 
 if (!isRegister && new URLSearchParams(location.search).get("expired")) {
   showMsg(msg, "You were signed out after being inactive. Please sign in again.", "error");
@@ -31,10 +31,13 @@ form.addEventListener("submit", async (e) => {
   try {
     const res = await postJSON(isRegister ? "Register.php" : "Login.php", f);
     if (res.error) {
-      showMsg(msg, res.error === "No Records Found" ? "Wrong username or password." : res.error, "error");
+      const isGenericLoginFailure = /no record/i.test(res.error || "");
+      showMsg(msg, isGenericLoginFailure ? "Wrong username or password." : res.error, "error");
     } else {
-      setUser({id: res.id, firstName: res.firstName, lastName: res.lastName});
-      location.href = "contacts.html";
+      // isAdmin only comes back from Login.php; registration always creates a normal user.
+      const isAdmin = !!Number(res.isAdmin || 0);
+      setUser({id: res.id, firstName: res.firstName, lastName: res.lastName, isAdmin});
+      location.href = isAdmin ? "admin.html" : "contacts.html";
       return;
     }
   } catch (err) {

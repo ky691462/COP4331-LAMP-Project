@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="css/styles.css?v=20260928b"><link rel="icon" href="logo.svg" type="image/svg+xml"><meta name="theme-color" content="#241c10">
+<title>Admin - Pocketbook</title><meta name="description" content="Manage Pocketbook users."></head>
+<body><header class="bar"><a class="logo" href="admin.html"><img src="logo.svg" alt="" width="30" height="30">Pocketbook <span class="label">admin</span></a><span class="stamp" aria-hidden="true">Personal Edition</span>
+<div class="actions"><a href="contacts.html" class="btn ghost small">My contacts</a><span class="who" id="who"></span><button id="logout" class="btn ghost small" type="button">Sign out</button></div></header>
+<main>
+
+<section class="card">
+<h1>Manage users</h1>
+<div class="toolbar">
+  <div class="grow"><label for="uq">Search users</label><input id="uq" type="search" placeholder="Name or username" autocomplete="off"></div>
+  <div><label for="ustatus">Status</label><select id="ustatus"><option value="all">All</option><option value="active">Active</option><option value="suspended">Suspended</option></select></div>
+</div>
+<p id="ustatus-msg" class="msg" role="status" aria-live="polite"></p>
+<div class="tablewrap"><table><thead><tr><th scope="col">Name</th><th scope="col">Username</th><th scope="col">Role</th><th scope="col">Status</th><th scope="col">Actions</th></tr></thead><tbody id="user-rows"></tbody></table></div>
+</section>
+
+<section class="card">
+<h1>Create account</h1>
+<form id="create-form">
+<label for="n-first">First name</label><input id="n-first" name="firstName" required>
+<label for="n-last">Last name</label><input id="n-last" name="lastName" required>
+<label for="n-login">Username</label><input id="n-login" name="login" required>
+<label for="n-pass">Password</label><input id="n-pass" name="password" type="password" autocomplete="new-password" required>
+<small class="hint">At least 8 characters, with one uppercase letter, one number, and one special character.</small>
+<label for="n-role">Role</label><select id="n-role" name="role"><option value="user">User</option><option value="admin">Admin</option></select>
+<p id="create-msg" class="msg" role="status" aria-live="polite"></p>
+<button class="btn accent">Create account</button>
+</form>
+</section>
+
+</main>
+
+<dialog id="pw-dlg" aria-labelledby="pw-title"><h2 id="pw-title">Change password</h2><p>Setting a new password for <strong id="pw-name"></strong>.</p>
+<form id="pw-form"><label for="pw-new">New password</label><input id="pw-new" name="password" type="password" autocomplete="new-password" required>
+<small class="hint">At least 8 characters, with one uppercase letter, one number, and one special character.</small>
+<p id="pw-msg" class="msg" role="status"></p>
+<div class="dlg-actions"><button id="pw-cancel" class="btn ghost" type="button">Cancel</button><button class="btn accent">Save password</button></div></form></dialog>
+
+<dialog id="entries-dlg" aria-labelledby="entries-title"><h2 id="entries-title">Entries for <span id="entries-name"></span></h2>
+<label for="entries-q">Search these entries</label><input id="entries-q" type="search" placeholder="Name, email, phone or address">
+<div class="tablewrap" style="margin-top:1rem;max-height:320px;overflow-y:auto"><table><thead><tr><th scope="col">Name</th><th scope="col">Email</th><th scope="col">Phone</th></tr></thead><tbody id="entries-rows"></tbody></table></div>
+<div class="dlg-actions"><button id="entries-close" class="btn ghost" type="button">Close</button></div></dialog>
+
+<script src="js/common.js?v=20260928b"></script><script src="js/admin.js?v=20260928b"></script></body></html>

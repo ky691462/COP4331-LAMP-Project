@@ -1,11 +1,11 @@
 const user = getUser();
-if (!user) location.href = "login.html";
+if (!user) location.href = "index.html";
+if (user.isAdmin) document.getElementById("admin-link").style.display = "inline-block";
 document.getElementById("who").textContent = safe(user.firstName) + " " + safe(user.lastName);
 document.getElementById("logout").addEventListener("click", logout);
-const q = document.getElementById("q"), body = document.getElementById("rows"), status = document.getElementById("status");
+const q = document.getElementById("q"), entries = document.getElementById("entries"), status = document.getElementById("status");
 const dlg = document.getElementById("contact-dlg"), form = document.getElementById("contact-form"), fmsg = document.getElementById("form-msg");
 const del = document.getElementById("delete-dlg");
-const COLORS = ["#4338ca","#0f766e","#b45309","#be185d","#1d4ed8","#7c3aed"];
 let timer, ctrl, deleteId = null;
 
 async function search(){
@@ -22,43 +22,72 @@ async function search(){
   }
 }
 
-function render(list){
-  body.replaceChildren();
-  showMsg(status, list.length ? list.length + (list.length === 1 ? " contact" : " contacts") + " found" : (q.value ? "No contacts match your search." : "No contacts yet. Add your first one."));
-  list.forEach(c => {
-    const tr = document.createElement("tr");
-    const first = safe(c.firstName), last = safe(c.lastName);
-    const nm = document.createElement("td"), wrap = document.createElement("div"), av = document.createElement("span");
-    wrap.className = "name"; av.className = "avatar"; av.setAttribute("aria-hidden", "true");
-    const initials = ((first[0] || "") + (last[0] || "")).toUpperCase();
-    av.textContent = initials;
-    av.style.setProperty("--c", COLORS[(String(c.id || 0).length + first.length + last.length) % COLORS.length]);
-    wrap.append(av, document.createTextNode((first + " " + last).trim() || "(no name)"));
-    nm.append(wrap); tr.append(nm);
-    [c.email, c.phone, c.address].forEach(t => { const td = document.createElement("td"); td.textContent = safe(t); tr.append(td); });
-    const td = document.createElement("td"); td.className = "row-actions";
-    const label = (first + " " + last).trim() || "this contact";
-    td.append(
-      btn("Edit", "ghost small", "Edit " + label, () => openForm(c)),
-      btn("Delete", "danger small", "Delete " + label, () => { deleteId = c.id; document.getElementById("del-name").textContent = label; del.showModal(); })
-    );
-    tr.append(td); body.append(tr);
-  });
-}
-
-function btn(text, cls, label, fn){
+function linkBtn(text, cls, label, fn){
   const b = document.createElement("button");
-  b.type = "button"; b.className = "btn " + cls; b.textContent = text;
+  b.type = "button"; b.className = "link-btn " + cls; b.textContent = text;
   b.setAttribute("aria-label", label); b.onclick = fn;
   return b;
 }
 
+function render(list){
+  showMsg(status, list.length ? list.length + (list.length === 1 ? " contact" : " contacts") + " found" : (q.value ? "No contacts match your search." : "No contacts yet. Add your first one."));
+  entries.replaceChildren();
+  const sorted = [...list].sort((a, b) =>
+    (safe(a.lastName) + " " + safe(a.firstName)).localeCompare(safe(b.lastName) + " " + safe(b.firstName), undefined, {sensitivity: "base"}));
+  const present = new Set();
+  let group = null, ul = null;
+
+  sorted.forEach(c => {
+    const first = safe(c.firstName), last = safe(c.lastName);
+    const key = ((last || first).trim()[0] || "#").toUpperCase();
+    if (key !== group) {
+      group = key; present.add(key);
+      const sec = document.createElement("section"); sec.className = "letter-group";
+      const h = document.createElement("h2"); h.className = "letter";
+      const sp = document.createElement("span"); sp.textContent = key; h.append(sp);
+      ul = document.createElement("ul"); ul.className = "entries";
+      sec.append(h, ul); entries.append(sec);
+    }
+    const li = document.createElement("li"); li.className = "entry";
+    const main = document.createElement("div"); main.className = "entry-main";
+    const nm = document.createElement("span"); nm.className = "entry-name";
+    const strong = document.createElement("strong"); strong.textContent = last || first || "(no name)";
+    nm.append(strong);
+    if (last && first) nm.append(document.createTextNode(", " + first));
+    const lead = document.createElement("span"); lead.className = "leader"; lead.setAttribute("aria-hidden", "true");
+    const ph = document.createElement("span"); ph.className = "entry-phone"; ph.textContent = safe(c.phone);
+    main.append(nm, lead, ph);
+    li.append(main);
+    const sub = [safe(c.address), safe(c.email)].filter(Boolean).join("  \u00b7  ");
+    if (sub) { const d = document.createElement("div"); d.className = "entry-sub"; d.textContent = sub; li.append(d); }
+    const label = (first + " " + last).trim() || "this contact";
+    const acts = document.createElement("div"); acts.className = "entry-actions";
+    acts.append(
+      linkBtn("Edit", "", "Edit " + label, () => openForm(c)),
+      linkBtn("Delete", "danger", "Delete " + label, () => { deleteId = c.id; document.getElementById("del-name").textContent = label; openDialog(del); })
+    );
+    li.append(acts); ul.append(li);
+  });
+
+  if (!list.length) {
+    const p = document.createElement("p"); p.className = "dir-empty";
+    p.textContent = q.value ? "No listings match your search." : "No listings yet. Add the first entry.";
+    entries.append(p);
+  }
+  const lastName = c => (safe(c.lastName) || safe(c.firstName) || "").toUpperCase();
+  document.getElementById("guide-l").textContent = sorted.length ? lastName(sorted[0]) : "\u2014";
+  document.getElementById("guide-r").textContent = sorted.length ? lastName(sorted[sorted.length - 1]) : "\u2014";
+  document.getElementById("dir-foot").textContent = "\u2014  " + list.length + (list.length === 1 ? " listing" : " listings") + "  \u2014";
+  document.querySelectorAll(".thumb-index span").forEach(t => t.classList.toggle("on", present.has(t.textContent)));
+}
+
 function openForm(c){
   form.reset(); showMsg(fmsg, "");
+  form.querySelector("button.btn:not(.ghost)").disabled = false;
   document.getElementById("dlg-title").textContent = c ? "Edit contact" : "Add contact";
   form.elements["id"].value = c ? c.id : "";
   if (c) ["firstName","lastName","email","phone","address"].forEach(k => form[k].value = safe(c[k]));
-  dlg.showModal(); form.firstName.focus();
+  openDialog(dlg); form.firstName.focus();
 }
 
 form.addEventListener("submit", async (e) => {
@@ -68,8 +97,9 @@ form.addEventListener("submit", async (e) => {
   const saveBtn = form.querySelector("button.btn:not(.ghost)");
   saveBtn.disabled = true;
   try {
-    const res = await postJSON(editing ? "UpdateContact.php" : "AddContact.php", f);
+    const res = await postJSON(editing ? "EditContact.php" : "AddContact.php", f);
     if (res.error) { showMsg(fmsg, res.error, "error"); saveBtn.disabled = false; return; }
+    saveBtn.disabled = false;
     dlg.close();
     search();
   } catch (err) {
@@ -98,3 +128,26 @@ document.getElementById("del-ok").onclick = async () => {
 
 q.addEventListener("input", () => { clearTimeout(timer); timer = setTimeout(search, 250); });
 search();
+
+// Delete my account — confirmed against the real DeleteAccount.php on the droplet.
+// POST with an empty body; the server reads the user from the session. On success it
+// destroys the session server-side too, so we just clear the local copy and redirect.
+const deleteAccountDlg = document.getElementById("delete-account-dlg");
+const deleteAccountMsg = document.getElementById("del-account-msg");
+document.getElementById("delete-account").onclick = () => { showMsg(deleteAccountMsg, ""); openDialog(deleteAccountDlg); };
+document.getElementById("del-account-cancel").onclick = () => deleteAccountDlg.close();
+document.getElementById("del-account-ok").onclick = async () => {
+  const okBtn = document.getElementById("del-account-ok");
+  okBtn.disabled = true;
+  try {
+    const res = await postJSON("DeleteAccount.php", {});
+    if (res.error) { showMsg(deleteAccountMsg, res.error, "error"); okBtn.disabled = false; return; }
+    clearUser();
+    location.href = "index.html?deleted=1";
+  } catch (e) {
+    console.error("Delete account error:", e);
+    showMsg(deleteAccountMsg, "Could not delete your account. Try again.", "error");
+    okBtn.disabled = false;
+  }
+};
+

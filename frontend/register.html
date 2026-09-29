@@ -1,12 +1,16 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="css/styles.css"><link rel="icon" href="logo.svg" type="image/svg+xml"><meta name="theme-color" content="#1b1e3a"><title>Create account - Pocketbook</title><meta name="description" content="Create a contacts account."></head>
-<body><header class="bar"><a class="logo" href="index.html"><img src="logo.svg" alt="" width="28" height="28">Pocketbook</a></header>
-<main><div class="card"><h1>Create account</h1>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="css/styles.css?v=20260928b"><link rel="icon" href="logo.svg" type="image/svg+xml"><meta name="theme-color" content="#241c10">
+<title>Create account - Pocketbook</title><meta name="description" content="Create a Pocketbook account."></head>
+<body><header class="bar"><a class="logo" href="index.html"><img src="logo.svg" alt="" width="30" height="30">Pocketbook</a></header>
+<main><div class="auth-wrap">
+<img src="hero-book.svg" alt="" class="hero-book" width="180" height="123">
+<p class="tagline">The traditional phonebook, rebuilt for speed.</p>
+<div class="card"><p class="eyebrow">New listing</p><h1>Create account</h1>
 <form id="auth-form" data-mode="register"><label for="firstName">First name</label><input id="firstName" name="firstName" autocomplete="given-name" required>
 <label for="lastName">Last name</label><input id="lastName" name="lastName" autocomplete="family-name" required>
 <label for="login">Username</label><input id="login" name="login" autocomplete="username" required>
 <label for="password">Password</label><input id="password" name="password" type="password" autocomplete="new-password" required>
-<small id="pw-hint" style="display:block;color:var(--muted);margin-top:.35rem">At least 8 characters, with one uppercase letter, one number, and one special character.</small>
-<p id="msg" class="msg" role="status" aria-live="polite"></p><button class="btn full">Create account</button></form>
-<p class="foot">Already registered? <a href="login.html">Sign in</a></p></div></main>
-<script src="js/common.js"></script><script src="js/auth.js"></script></body></html>
+<small class="hint">At least 8 characters, with one uppercase letter, one number, and one special character.</small>
+<p id="msg" class="msg" role="status" aria-live="polite"></p><button class="btn accent full">Create account</button></form>
+<p class="foot">Already registered? <a href="index.html">Sign in</a></p></div></div></main>
+<script src="js/common.js?v=20260928b"></script><script src="js/auth.js?v=20260928b"></script></body></html>
